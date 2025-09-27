@@ -520,6 +520,7 @@ int CTextureDatabaseRuntime__GetEntry_hook(TextureDatabaseRuntime *a1, const cha
 #include "EntryExitManager.h"
 #include "Occlusion.h"
 #include "Mobile/MobileMenu/MobileMenu.h"
+#include "BulletTraces.h"
 
 void InjectHooks()
 {
@@ -541,6 +542,7 @@ void InjectHooks()
 
     CWeapon::InjectHooks();
     CWeaponInfo::InjectHooks();
+    CBulletTraces::InjectHooks();
 
 	CHook::Write(g_libGTASA + (VER_x32 ? 0x678954 : 0x84F2D0), &Scene);
 
