@@ -1,15 +1,10 @@
-/*
-    Plugin-SDK file
-    Authors: GTA Community. See more here
-    https://github.com/DK22Pac/plugin-sdk
-    Do not delete this comment block. Respect others' work!
-*/
+//
+// Created by Traw-GG on 05.10.2025.
+//
 #pragma once
 
-
-#include "RenderWare.h"
-#include "game/common.h"
-#include "game/Collision/Sphere.h"
+#include "../RW/RenderWare.h"
+#include "../Collision/Sphere.h"
 #include "ShadowCamera.h"
 
 class CPhysical;
@@ -38,6 +33,7 @@ public:
     void              Destroy();
     CShadowCamera*    GetShadowCamera();
     void              DrawBorderAroundTexture(const RwRGBA& color);
+    bool              SetShadowedObject(CPhysical *pPhysical);
 
     /// this creates all stuff for shadow processing (cameras, textures)
     bool Create(bool isBlurred, int32 blurPasses, bool drawMoreBlur);

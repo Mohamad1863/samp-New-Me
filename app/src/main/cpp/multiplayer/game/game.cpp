@@ -502,8 +502,8 @@ bool CGame::InitialiseRenderWare() {
 		return false;
 	}
 	Scene.m_pRwCamera = camera;
-	TheCamera.Init();
-	TheCamera.SetRwCamera(Scene.m_pRwCamera);
+	CCamera::Get().Init();
+	CCamera::Get().SetRwCamera(Scene.m_pRwCamera);
 	RwCameraSetFarClipPlane(Scene.m_pRwCamera, 2000.0f);
 	RwCameraSetNearClipPlane(Scene.m_pRwCamera, 0.9f);
 	CameraSize(Scene.m_pRwCamera, nullptr, 0.7f, DEFAULT_ASPECT_RATIO);
@@ -592,7 +592,7 @@ void CGame::Process() {
 	// CCover::Update()
 
 //	auto p_tx = (CSimpleTransform *)&TheCamera + 0x14 + 0x30;
-//	if ( !TheCamera.m_pMat )
+//	if ( !CCamera::Get().m_pMat )
 //		p_tx = *TheCamera + 0x4;
 
 	//CAudioZones::Update(0, p_tx->m_translate);
@@ -657,7 +657,7 @@ void CGame::Process() {
 
         // CInterestingEvents::ScanForNearbyEntities
 
-		((void (*)(CCamera*)) (g_libGTASA + (VER_x32 ? 0x003DC7D0 + 1 : 0x4BAB78)))(&TheCamera); // CCamera::Process()
+		((void (*)(CCamera*)) (g_libGTASA + (VER_x32 ? 0x003DC7D0 + 1 : 0x4BAB78)))(&CCamera::Get()); // CCamera::Process()
 
 		// CCullZones::Update() менты не могут найти?
 		// CGameLogic::Update() // FIXME: TEST
@@ -678,7 +678,7 @@ void CGame::Process() {
 //		CRoadBlocks::GenerateRoadBlocks();
 //		CCarCtrl::RemoveDistantCars();
 //		CCarCtrl::RemoveCarsIfThePoolGetsFull();
-		auto temp = TheCamera.m_pRwCamera;
+		auto temp = CCamera::Get().m_pRwCamera;
 
 		auto g_fx = *(uintptr_t *) (g_libGTASA + (VER_x32 ? 0x00820520 : 0xA062A8));
 		((void (*)(uintptr_t*, RwCamera*, float )) (g_libGTASA + (VER_x32 ? 0x00363DE0 + 1 : 0x433F48)))(&g_fx, temp, CTimer::ms_fTimeStep / 50.0f); // Fx_c::Update

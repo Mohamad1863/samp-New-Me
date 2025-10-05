@@ -21,7 +21,7 @@
 #include "Pipelines/CustomBuilding/CustomBuildingDNPipeline.h"
 #include "Weather.h"
 #include "PointLights.h"
-#include "Shadows.h"
+#include "Shadow/Shadows.h"
 #include "World.h"
 
 void CEntity::UpdateRwFrame()
@@ -86,7 +86,7 @@ float CEntity::GetDistanceFromCamera()
     if(!this)
         return 0;
 
-    return DistanceBetweenPoints(GetPosition(), TheCamera.GetPosition());
+    return DistanceBetweenPoints(GetPosition(), CCamera::Get().GetPosition());
 }
 
 bool CEntity::IsScanCodeCurrent() const {
@@ -124,7 +124,7 @@ bool CEntity::IsVisible()
 bool CEntity::GetIsOnScreen() {
     CVector thisVec;
     GetBoundCentre(thisVec);
-    return TheCamera.IsSphereVisible(&thisVec, CModelInfo::GetModelInfo(m_nModelIndex)->GetColModel()->GetBoundRadius());
+    return CCamera::Get().IsSphereVisible(&thisVec, CModelInfo::GetModelInfo(m_nModelIndex)->GetColModel()->GetBoundRadius());
 }
 
 RwMatrix* CEntity::GetModellingMatrix() {
@@ -510,7 +510,7 @@ void CEntity::ProcessLightsForEntity() {
             auto vecDir = vecEffPos - GetPosition();
             vecDir.Normalise();
 
-            auto vecCamDir = TheCamera.GetPosition() - vecEffPos;
+            auto vecCamDir = CCamera::Get().GetPosition() - vecEffPos;
             auto fCamDist = vecCamDir.Magnitude();
             auto fScale = 2.0F / fCamDist;
             auto vecScaledCam = (vecCamDir * fScale);
@@ -742,7 +742,7 @@ void CEntity::ProcessLightsForEntity() {
         if (!bSkipCoronaChecks && bDoColorLight) {
             auto bCanCreateLight = true;
             if (effect->light.m_bCheckDirection) {
-                const auto& camPos = TheCamera.GetPosition();
+                const auto& camPos = CCamera::Get().GetPosition();
                 CVector lightOffset{
                         static_cast<float>(effect->light.offsetX),
                         static_cast<float>(effect->light.offsetY),

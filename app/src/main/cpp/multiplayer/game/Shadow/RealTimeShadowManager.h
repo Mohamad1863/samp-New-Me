@@ -1,7 +1,11 @@
+//
+// Created by Traw-GG on 05.10.2025.
+//
+
 #pragma once
 
 #include "ShadowCamera.h"
-#include "Entity/Physical.h"
+#include "../Entity/Physical.h"
 
 class CRealTimeShadow;
 
@@ -18,9 +22,9 @@ public:
 
 public:
     static void InjectHooks();
-//
-//    void Init();
-//    void Exit();
+
+    void Init();
+    void Exit();
 //    void ReInit();
 //    void Update();
 //

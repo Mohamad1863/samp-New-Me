@@ -176,7 +176,7 @@ bool CVehicle::DoTailLightEffect(int32_t lightId, CMatrix* matVehicle, int isRig
                 100, 0, 0, alpha,
                 &v,
                 0.65f,
-                /*TheCamera.LODDistMultiplier*/ 70.f,
+                /*CCamera::Get().LODDistMultiplier*/ 70.f,
                 eCoronaType::CORONATYPE_HEADLIGHT,
                 eCoronaFlareType::FLARETYPE_NONE,
                 false,
@@ -199,7 +199,7 @@ bool CVehicle::DoTailLightEffect(int32_t lightId, CMatrix* matVehicle, int isRig
                 255, 255, 255, 200,
                 &v,
                 0.70f,
-                /*TheCamera.LODDistMultiplier*/ 70.f,
+                /*CCamera::Get().LODDistMultiplier*/ 70.f,
                 eCoronaType::CORONATYPE_HEADLIGHT,
                 eCoronaFlareType::FLARETYPE_NONE,
                 false,
@@ -233,7 +233,7 @@ void CVehicle::DoHeadLightBeam(eVehicleDummy dummyId, CMatrix* matrix, bool isRi
     if (!isRight) {
         point -= 2 * pointModelSpace.x * matrix->GetRight();
     }
-    const CVector pointToCamDir = Normalized(TheCamera.GetPosition() - point);
+    const CVector pointToCamDir = Normalized(CCamera::Get().GetPosition() - point);
     const auto    alpha = (uint8)((1.0f - std::fabs(DotProduct(pointToCamDir, matrix->GetForward()))) * 45.0f);
 
     RwRenderStateSet(rwRENDERSTATEZWRITEENABLE,         RWRSTATE(FALSE));

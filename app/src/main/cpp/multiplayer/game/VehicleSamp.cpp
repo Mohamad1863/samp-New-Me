@@ -12,7 +12,7 @@
 #include "game/Enums/eCarNodes.h"
 #include "DamageManager.h"
 #include "VehicleSamp.h"
-#include "Shadows.h"
+#include "Shadow/Shadows.h"
 #include "Entity/Vehicle/Automobile.h"
 #include "util/TextRasterizer/TextRasterizer.h"
 #include "cHandlingDataMgr.h"

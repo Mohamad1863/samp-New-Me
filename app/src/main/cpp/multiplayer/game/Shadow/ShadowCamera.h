@@ -1,13 +1,10 @@
-/*
-    Plugin-SDK file
-    Authors: GTA Community. See more here
-    https://github.com/DK22Pac/plugin-sdk
-    Do not delete this comment block. Respect others' work!
-*/
+//
+// Created by Traw-GG on 05.10.2025.
+//
 #pragma once
 
-#include "common.h"
-#include "RW/RenderWare.h"
+#include "../common.h"
+#include "../RW/RenderWare.h"
 
 class CShadowCamera { // AKA CShadowImage
 public:

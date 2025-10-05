@@ -172,7 +172,7 @@ void CClouds::Render_MaybeRenderRockstarLogo(float colorBalance) {
 
     RwRenderStateSet(rwRENDERSTATETEXTURERASTER, RWRSTATE(RwTextureGetRaster(CCoronas::gpCoronaTexture[0])));
 
-    const auto camPos = TheCamera.GetPosition();
+    const auto camPos = CCamera::Get().GetPosition();
     //
     // Draw `R`
     //
@@ -241,10 +241,10 @@ void CClouds::Render_RenderLowClouds(float colorBalance) {
     RwRenderStateSet(rwRENDERSTATETEXTURERASTER, RWRSTATE(RwTextureGetRaster(gpCloudTex)));
 
     // Calculate camera roll
-    ms_cameraRoll = TheCamera.GetRoll();
+    ms_cameraRoll = CCamera::Get().GetRoll();
 
     // Render clouds
-    const auto camPos = TheCamera.GetPosition();
+    const auto camPos = CCamera::Get().GetPosition();
     for (int i = 0; i < LOW_CLOUDS_COORDS.size(); i++) {
         const CVector& offset = LOW_CLOUDS_COORDS[i];
         const CVector cloud3DPos = camPos + offset * CVector{ 1000.0f, 1000.0f, 60.0f } + CVector{ 0.0f, 0.0f, 40.0f };
@@ -319,7 +319,7 @@ void CClouds::Render_MaybeRenderStreaks() {
     RenderBuffer::ClearRenderBuffer();
 
     const auto PushVertex = [
-            basePos = offsetDir * 1000.f + TheCamera.GetPosition(),
+            basePos = offsetDir * 1000.f + CCamera::Get().GetPosition(),
             size
     ](float scale, CRGBA color) {
         RenderBuffer::PushVertex(
@@ -360,7 +360,7 @@ void CClouds::Render_MaybeRenderRainbows() {
 
     RwRenderStateSet(rwRENDERSTATETEXTURERASTER, RWRSTATE(RwTextureGetRaster(CCoronas::gpCoronaTexture[0])));
 
-    const auto camPos = TheCamera.GetPosition();
+    const auto camPos = CCamera::Get().GetPosition();
 
     for (auto i = 0; i < NUM_RAINBOW_LINES; i++) {
         const auto offset = CVector{
@@ -409,7 +409,7 @@ void CClouds::Render_MaybeRenderMoon(float colorBalance) {
     //
     CVector   moonPosScr;
     CVector2D scrSize;
-    auto posInWorld = TheCamera.GetPosition() + CAMERA_TO_CLOUD_OFFSET;
+    auto posInWorld = CCamera::Get().GetPosition() + CAMERA_TO_CLOUD_OFFSET;
     if (!CSprite::CalcScreenCoors(posInWorld, &moonPosScr, &scrSize.x, &scrSize.y, false, true)) {
         return;
     }
@@ -483,7 +483,7 @@ void CClouds::Render_MaybeRenderMoon(float colorBalance) {
 }
 
 void CClouds::Update() {
-//    CloudRotation = std::sin(TheCamera.Orientation - 0.85f) * CWeather::Wind * 0.001f + CloudRotation;
+//    CloudRotation = std::sin(CCamera::Get().Orientation - 0.85f) * CWeather::Wind * 0.001f + CloudRotation;
 //    IndividualRotation += (int32)((CTimer::GetTimeStep() * CWeather::Wind * 0.5f + 0.3f) * 60.0f);
 }
 
@@ -536,7 +536,7 @@ void CClouds::VolumetricCloudsRender() {
     const auto fadeOutBeginDist = m_fVolumetricCloudMaxDistance - 100.f;
     const auto fadeOutDist      = m_fVolumetricCloudMaxDistance + 200.f;
 
-    const auto camPos = TheCamera.GetPosition();
+    const auto camPos = CCamera::Get().GetPosition();
 
     auto& gfVolumetricCloudFader = StaticRef<float, 0xC6E970>();
     if (m_bVolumetricCloudHeightSwitch) {
@@ -577,7 +577,7 @@ void CClouds::VolumetricCloudsRender() {
     gVecPlayerCoors = plyrPos;
 
     if (bIsCameraOrPlayerPosNotStatic) { // If player/it's veh has moved, recreate the clouds
-        const auto t = plyrVeh ? (CPlaceable*)plyrVeh : (CPlaceable*)&TheCamera;
+        const auto t = plyrVeh ? (CPlaceable*)plyrVeh : (CPlaceable*)&CCamera::Get();
         auto pos = (
                 t->GetPosition()
                 + t->GetForward() * fadeOutDist
@@ -734,7 +734,7 @@ void CClouds::VolumetricClouds_Create(CVector *posn) {
             );
         }
     } else {
-        const auto camPos  = TheCamera.GetPosition();
+        const auto camPos  = CCamera::Get().GetPosition();
         const auto maxDist = m_fVolumetricCloudMaxDistance;
         for (auto i = 0; i < MAX_VOLUMETRIC_CLOUDS; i++) {
             AddVolumetricCloud(
@@ -911,7 +911,7 @@ void CClouds::MovingFog_Update() {
     if (MovingFog_GetFXIntensity() == 0.f)
         return;
 
-    CVector camPos = TheCamera.GetPosition();
+    CVector camPos = CCamera::Get().GetPosition();
     for (int32 i = 0; i < MAX_MOVING_FOG; i++) {
         if (!ms_mf.m_bFogSlots[i]) {
             MovingFog_Create(&camPos);
@@ -973,7 +973,7 @@ void CClouds::MovingFogRender() {
 //        }
 //    }
 
-    CVector camUp = TheCamera.GetUpVector(), camRight = TheCamera.GetRightVector();
+    CVector camUp = CCamera::Get().GetUpVector(), camRight = CCamera::Get().GetRightVector();
 
     CPostEffects::ImmediateModeRenderStatesStore();
     CPostEffects::ImmediateModeRenderStatesSet();
@@ -1044,7 +1044,7 @@ void CClouds::RenderBottomFromHeight() {
     * but it isn't complete...
     ****** */
 
-//    const auto camPos = TheCamera.GetPosition();
+//    const auto camPos = CCamera::Get().GetPosition();
 //    if (camPos.z < -90.f) { // 0x71557D [Moved up here]
 //        return;
 //    }
@@ -1128,12 +1128,12 @@ int32 CClouds::VolumetricClouds_GetFirstFreeSlot() {
 
 void CClouds::RenderSkyPolys() {
     CVector norm{}, pos{};
-    if (TheCamera.m_matrix) {
-        pos = TheCamera.m_matrix->GetPosition();
-        norm = TheCamera.m_matrix->GetForward();
+    if (CCamera::Get().m_matrix) {
+        pos = CCamera::Get().m_matrix->GetPosition();
+        norm = CCamera::Get().m_matrix->GetForward();
     } else {
-        pos = TheCamera.m_placement.m_vPosn;
-        float fHeading = TheCamera.m_placement.m_fHeading;
+        pos = CCamera::Get().m_placement.m_vPosn;
+        float fHeading = CCamera::Get().m_placement.m_fHeading;
         norm.x = -sin(fHeading);
         norm.y = cos(fHeading);
     }
@@ -1309,9 +1309,9 @@ void CClouds::RenderSkyPolys() {
 //                    In.x = -100.0;
 //                    v16 = -100.0;
 //                }
-//                v17 = (CSimpleTransform *)&TheCamera.m_pMat->tx;
-//                if ( !TheCamera.m_pMat )
-//                    v17 = &TheCamera.m_transform;
+//                v17 = (CSimpleTransform *)&CCamera::Get().m_pMat->tx;
+//                if ( !CCamera::Get().m_pMat )
+//                    v17 = &CCamera::Get().m_transform;
 //                v18 = v17->m_translate.z;
 //                v19 = v17->m_translate.y + 0.0;
 //                v20 = StarCoorsY[v15 % 9];
@@ -1341,9 +1341,9 @@ void CClouds::RenderSkyPolys() {
 //            }
 //            while ( v15 != 0xB );
 //            In.z = 10.0;
-//            v23 = (CSimpleTransform *)&TheCamera.m_pMat->tx;
-//            if ( !TheCamera.m_pMat )
-//                v23 = &TheCamera.m_transform;
+//            v23 = (CSimpleTransform *)&CCamera::Get().m_pMat->tx;
+//            if ( !CCamera::Get().m_pMat )
+//                v23 = &CCamera::Get().m_transform;
 //            v24 = v23->m_translate.z;
 //            v25 = v23->m_translate.y + -90.0;
 //            In.x = v23->m_translate.x + 100.0;
@@ -1383,17 +1383,17 @@ void CClouds::RenderSkyPolys() {
 //    v4.n64_f32[0] = CWeather::Foggyness;
 //    RwRenderStateSet(rwRENDERSTATETEXTURERASTER, gpCloudTex[0]->raster);
 //    v30 = 1.0 - vmax_f32(v2, vmax_f32(v4, v3)).n64_f32[0];
-//    v31 = TheCamera.m_pMat;
+//    v31 = CCamera::Get().m_pMat;
 //    B = (unsigned int)(float)(v30 * (float)v29);
 //    G = (unsigned int)(float)(v30 * (float)v28);
 //    v54 = (unsigned int)(float)(v30 * (float)v27);
-//    if ( TheCamera.m_pMat )
+//    if ( CCamera::Get().m_pMat )
 //    {
-//        v32 = sqrtf((float)(TheCamera.m_pMat->xx * TheCamera.m_pMat->xx) + (float)(TheCamera.m_pMat->yx
-//                                                                                   * TheCamera.m_pMat->yx));
-//        if ( TheCamera.m_pMat->zz < 0.0 )
+//        v32 = sqrtf((float)(CCamera::Get().m_pMat->xx * CCamera::Get().m_pMat->xx) + (float)(CCamera::Get().m_pMat->yx
+//                                                                                   * CCamera::Get().m_pMat->yx));
+//        if ( CCamera::Get().m_pMat->zz < 0.0 )
 //            v32 = -v32;
-//        v33 = atan2f(TheCamera.m_pMat->zx, v32);
+//        v33 = atan2f(CCamera::Get().m_pMat->zx, v32);
 //    }
 //    else
 //    {
@@ -1408,7 +1408,7 @@ void CClouds::RenderSkyPolys() {
 //        v37 = (CSimpleTransform *)&v31->tx;
 //        v38 = LowCloudsY[v34] * 800.0;
 //        if ( !v31 )
-//            v37 = &TheCamera.m_transform;
+//            v37 = &CCamera::Get().m_transform;
 //        v39 = *(_QWORD *)&v37->m_translate.x;
 //        In.y = v37->m_translate.y;
 //        In.x = *(float *)&v39 + v36;
@@ -1430,7 +1430,7 @@ void CClouds::RenderSkyPolys() {
 //                    0xFFu);
 //        if ( v34 == 0xB )
 //            break;
-//        v31 = TheCamera.m_pMat;
+//        v31 = CCamera::Get().m_pMat;
 //        ++v34;
 //    }
 //    CSprite::FlushSpriteBuffer();
@@ -1440,9 +1440,9 @@ void CClouds::RenderSkyPolys() {
 //        for ( i = 0; i != 6; ++i )
 //        {
 //            In.z = 5.0;
-//            v41 = (CSimpleTransform *)&TheCamera.m_pMat->tx;
-//            if ( !TheCamera.m_pMat )
-//                v41 = &TheCamera.m_transform;
+//            v41 = (CSimpleTransform *)&CCamera::Get().m_pMat->tx;
+//            if ( !CCamera::Get().m_pMat )
+//                v41 = &CCamera::Get().m_transform;
 //            v42 = v41->m_translate.y;
 //            v43 = v41->m_translate.z;
 //            In.x = v41->m_translate.x + (float)((float)i * 1.5);
@@ -1476,9 +1476,9 @@ void CClouds::RenderSkyPolys() {
 //        v45 = CTimer::m_snTimeInMilliseconds & 0x1FFF;
 //        if ( v45 >> 5 <= 0x18 )
 //        {
-//            v46 = (CSimpleTransform *)&TheCamera.m_pMat->tx;
-//            if ( !TheCamera.m_pMat )
-//                v46 = &TheCamera.m_transform;
+//            v46 = (CSimpleTransform *)&CCamera::Get().m_pMat->tx;
+//            if ( !CCamera::Get().m_pMat )
+//                v46 = &CCamera::Get().m_transform;
 //            v47 = v46->m_translate.x;
 //            v48 = v46->m_translate.y;
 //            v49 = v46->m_translate.z;

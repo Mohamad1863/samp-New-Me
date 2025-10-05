@@ -11,7 +11,7 @@ void CCamera::InjectHooks() {
 }
 
 CCam& CCamera::GetActiveCamera() {
-    return TheCamera.m_aCams[TheCamera.m_nActiveCam];
+    return CCamera::Get().m_aCams[CCamera::Get().m_nActiveCam];
 }
 
 void CCamera::Init() {

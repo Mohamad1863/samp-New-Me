@@ -503,8 +503,8 @@ int CTextureDatabaseRuntime__GetEntry_hook(TextureDatabaseRuntime *a1, const cha
 #include "game/Birds.h"
 #include "game/PathFind.h"
 #include "game/FileLoader.h"
-#include "game/RealTimeShadowManager.h"
-#include "Shadows.h"
+#include "game/Shadow/RealTimeShadowManager.h"
+#include "Shadow/Shadows.h"
 #include "Widgets/WidgetRadar.h"
 #include "graphics/RQShader.h"
 #include "Pipelines/CustomCar/CustomCarEnvMapPipeline.h"
@@ -1221,11 +1221,11 @@ void CCam__Process_hook(CCam* thiz)
             auto gtaPed = CLocalPlayer::GetPlayerPed()->m_pPed;
             if (auto pPed = CLocalPlayer::GetPlayerPed())
             {
-                TheCamera.m_uiTransitionDuration = 0xFFFFFFFF;
-                TheCamera.m_uiTransitionDurationTargetCoors = 0xFFFFFFFF;
-                TheCamera.m_bJust_Switched = false;
+                CCamera::Get().m_uiTransitionDuration = 0xFFFFFFFF;
+                CCamera::Get().m_uiTransitionDurationTargetCoors = 0xFFFFFFFF;
+                CCamera::Get().m_bJust_Switched = false;
 
-                gtaPed->m_fAimingRotation = gtaPed->m_fCurrentRotation = atan2(TheCamera.m_aCams[0].Front.y, TheCamera.m_aCams[0].Front.x) - M_PI_2;
+                gtaPed->m_fAimingRotation = gtaPed->m_fCurrentRotation = atan2(CCamera::Get().m_aCams[0].Front.y, CCamera::Get().m_aCams[0].Front.x) - M_PI_2;
 
                 CFirstPersonCamera::ProcessCameraOnFoot(thiz, pPed);
             }
@@ -1238,9 +1238,9 @@ void CCam__Process_hook(CCam* thiz)
             CPedSamp* pPed = CLocalPlayer::GetPlayerPed();
             if (pPed)
             {
-                TheCamera.m_uiTransitionDuration = 0xFFFFFFFF;
-                TheCamera.m_uiTransitionDurationTargetCoors = 0xFFFFFFFF;
-                TheCamera.m_bJust_Switched = false;
+                CCamera::Get().m_uiTransitionDuration = 0xFFFFFFFF;
+                CCamera::Get().m_uiTransitionDurationTargetCoors = 0xFFFFFFFF;
+                CCamera::Get().m_bJust_Switched = false;
 
                 CFirstPersonCamera::ProcessCameraInVeh(thiz, pPed, veh);
             }

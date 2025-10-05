@@ -18,6 +18,13 @@
 #include "game/Models/BaseModelInfo.h"
 #include "vendor/EntityRef.hpp"
 
+class CPed;
+class CVehicle;
+class CBike;
+class CBmx;
+class CBoat;
+class CObject;
+
 //#pragma pack(push, 1)
 struct CEntity : public CPlaceable
 {

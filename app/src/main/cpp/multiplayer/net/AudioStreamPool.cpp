@@ -173,9 +173,9 @@ void CAudioStreamPool::Process()
 	}
 
 	BASS_Set3DPosition(
-			reinterpret_cast<const BASS_3DVECTOR*>(&TheCamera.GetPosition()), nullptr,
-			reinterpret_cast<const BASS_3DVECTOR*>(&TheCamera.GetMatrix().GetUp()),
-			reinterpret_cast<const BASS_3DVECTOR*>(&TheCamera.GetMatrix().GetForward())
+			reinterpret_cast<const BASS_3DVECTOR*>(&CCamera::Get().GetPosition()), nullptr,
+			reinterpret_cast<const BASS_3DVECTOR*>(&CCamera::Get().GetMatrix().GetUp()),
+			reinterpret_cast<const BASS_3DVECTOR*>(&CCamera::Get().GetMatrix().GetForward())
 	);
 
 	BASS_Apply3D();

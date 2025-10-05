@@ -30,7 +30,7 @@ void CBulletTraces::Render() {
         const float t = 1.0f - (float)trace.GetRemainingLifetime() / (float)trace.m_nLifeTime;
 
         {
-            const auto camToOriginDir = (trace.m_vecStart - CCamera::Get()->GetPosition()).Normalized();
+            const auto camToOriginDir = (trace.m_vecStart - CCamera::Get().GetPosition()).Normalized();
 
             const auto up = camToOriginDir.Cross(trace.GetDirection().Normalized()).Normalized();
             const auto sizeVec = up * (trace.m_fRadius * t);
@@ -77,7 +77,7 @@ void CBulletTraces::Render() {
 }
 
 void PlayFrontEndSoundForTrace(CVector fromWorldSpace, CVector toWorldSpace) {
-    CMatrix camMat = CCamera::Get()->GetMatrix();
+    CMatrix camMat = CCamera::Get().GetMatrix();
     const CVector& camPos = camMat.GetPosition();
 
     const auto fromRelToCam = fromWorldSpace - camPos;
