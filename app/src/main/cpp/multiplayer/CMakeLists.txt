@@ -50,6 +50,26 @@ target_link_libraries(multiplayer
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/bass/libs/${ANDROID_ABI}/libbass.so
 )
 
-# Set compilation flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s -w -fstack-protector -Wall -O3 -fexceptions")
+if(${ANDROID_ABI} STREQUAL "arm64-v8a")
+    # page size increased for x64
+    # 16kb+ support
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=65536")
+endif()
 
+# Compilation flags for debug builds
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("- Build type: Debug - Selected!")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Og -fexceptions -pthread -g3 -gdwarf-5")
+endif()
+
+# Compilation flags for release builds
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("- Build type: ${CMAKE_BUILD_TYPE} - Selected!")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s -w -O3 -fexceptions -fstack-protector-strong -pthread")
+
+    if(${ANDROID_ABI} STREQUAL "arm64-v8a")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv8-a -mtune=cortex-a78")
+    elseif(${ANDROID_ABI} STREQUAL "armeabi-v7a")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a -mfpu=neon -mfloat-abi=softfp")
+    endif()
+endif()
