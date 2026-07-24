@@ -116,8 +116,16 @@ void CSettings::LoadSettings(const char *szNickName, int iChatLines)
 	snprintf(m_Settings.szFont, sizeof(m_Settings.szFont), "visby-round-cf-extra-bold.ttf");
 
 	memset(m_Settings.szIp, 0, sizeof(m_Settings.szIp));
-	const char *szIp = ini_table_get_entry(config, "client", "ip");
-	strcpy(m_Settings.szIp, szIp);
+
+// مقدار پیش‌فرض (اگر فایل IP نداشته باشد)
+    strcpy(m_Settings.szIp, "45.156.186.248");   // ← IP خودت رو بزن
+
+    const char *szIp = ini_table_get_entry(config, "client", "ip");
+    if (szIp && strlen(szIp) > 0) {
+        strcpy(m_Settings.szIp, szIp);   // اگر فایل مقدار داشت، جایگزین کن
+    }
+
+    m_Settings.port = ini_table_get_entry_as_int(config, "client", "port", 7777);
 
 	m_Settings.port = ini_table_get_entry_as_int(config, "client", "port", 7777);
 
