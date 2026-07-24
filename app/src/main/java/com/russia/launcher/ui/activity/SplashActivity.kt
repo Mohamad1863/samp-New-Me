@@ -190,33 +190,9 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkVersion() {
-        val latestVersionInfoCall = networkService?.latestVersionInfoDto
-        latestVersionInfoCall?.enqueue(object : Callback<LatestVersionInfoDto?> {
-            override fun onResponse(call: Call<LatestVersionInfoDto?>, response: Response<LatestVersionInfoDto?>) {
-                if (!response.isSuccessful) {
-                    finish()
-                    exitProcess(0)
-                }
-                val currentVersion = currentVersion
-                val latestVersion: Int = response.body()?.version?.toInt() ?: 0
-                MainUtils.LATEST_APK_INFO = response.body()
-                if (currentVersion >= latestVersion) {
-                    apkVersionChecked = true
-                    startIfReady()
-                    return
-                }
-                MainUtils.type = DownloadType.UPDATE_APK
-                startActivity(Intent(this@SplashActivity, LoaderActivity::class.java))
-            }
-
-            override fun onFailure(call: Call<LatestVersionInfoDto?>, t: Throwable) {
-                finish()
-                exitProcess(0)
-            }
-        })
+        apkVersionChecked = true
+        startIfReady()
     }
-
-
     private val currentVersion: Int
         get() {
             val pm = this.packageManager
